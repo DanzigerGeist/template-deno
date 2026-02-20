@@ -59,6 +59,7 @@ The `Makefile` provides a simplified interface over `deno task`:
 | Command          | Description                |
 | ---------------- | -------------------------- |
 | `make setup`     | Install deps and git hooks |
+| `make format`    | Format code                |
 | `make check`     | Run all quality checks     |
 | `make test`      | Run test suite             |
 | `make security`  | Run security scans         |
