@@ -1,4 +1,4 @@
-# template-deno
+# Deno Project Template
 
 [![MIT License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![CI](https://github.com/DanzigerGeist/template-deno/actions/workflows/pr-checks.yml/badge.svg)](https://github.com/DanzigerGeist/template-deno/actions/workflows/pr-checks.yml)
