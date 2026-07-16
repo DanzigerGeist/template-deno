@@ -4,14 +4,32 @@ docs/
 .coverage/
 
 # AI assistants
-.claude/
+.claude/settings.local.json
+.claude/*.local.json
+.claude/**/*.log
+CLAUDE.local.md
+.omc/*
+!.omc/skills/
+.omx/
+.omo/
 .codex/
+AGENTS.override.md
+.aider.input.history
+.aider.chat.history.md
+.aider.llm.history
+.aider.tags.cache.v*
+.gemini/
+gemini-debug.log
+.gemini-clipboard/
 .cursor/
-.aider*
 .continue/
 .codeium/
 .windsurf/
 .copilot/
+.opencode/
+.cline/
+.crush/
+.warp/
 
 
 ###----------------###
