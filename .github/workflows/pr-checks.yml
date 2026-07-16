@@ -12,16 +12,16 @@ jobs:
     name: Commits
     runs-on: ubuntu-latest
     timeout-minutes: 10
+    permissions:
+      contents: read
+      pull-requests: read
     steps:
       - name: Checkout
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
       - name: Conventional commits check
-        uses: cocogitto/cocogitto-action@v4
-        with:
-          command: check
-          args: --from-latest-tag
+        uses: wagoid/commitlint-github-action@v6
 
   dependencies:
     name: Dependencies
