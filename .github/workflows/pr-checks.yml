@@ -40,7 +40,7 @@ jobs:
           deno-version: 2.x
           cache: true
       - name: Verify dependencies and lockfile
-        run: deno install --frozen
+        run: deno ci
 
   format:
     name: Format

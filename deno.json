@@ -87,8 +87,8 @@
       ]
     },
     "check:dependencies": {
-      "description": "Verify dependencies and lockfile are in sync",
-      "command": "deno install --frozen"
+      "description": "Install dependencies strictly from the lockfile",
+      "command": "deno ci"
     },
     "check:docs": {
       "description": "Lint JSDoc and run doc code blocks as tests",
