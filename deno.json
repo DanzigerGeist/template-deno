@@ -243,19 +243,13 @@
   },
   "publish": {
     "exclude": [
-      ".coverage/",
-      ".idea/",
-      ".DS_Store",
       ".editorconfig",
       ".gitattributes",
       ".github/",
-      ".vscode/",
       "Makefile",
       "benchmarks/",
       "cog.toml",
       "deno.lock",
-      "docs/",
-      "target/",
       "tests/"
     ]
   }
