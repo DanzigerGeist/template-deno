@@ -67,6 +67,7 @@ the first release, and enable branch protection on `master`.
 ├── AGENTS.md            # Guidance for AI agents
 ├── CLAUDE.md            # Claude Code entrypoint (imports AGENTS.md)
 ├── deno.json            # Project config, tasks, dependencies, coverage thresholds
+├── deno.lock            # Locked dependency versions, enforced in CI by deno ci
 ├── cog.toml             # Cocogitto config (versioning, hooks, changelog)
 ├── Makefile             # Simplified command interface
 ├── .editorconfig        # Editor formatting rules
