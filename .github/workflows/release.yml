@@ -105,6 +105,7 @@ jobs:
     needs: release
     if: needs.release.outputs.should_release == 'true'
     permissions:
+      contents: read
       packages: write
     env:
       NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
