@@ -23,7 +23,7 @@ jobs:
       version: ${{ steps.version.outputs.version }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           fetch-depth: 0
       - name: Dry-run version bump
@@ -58,7 +58,7 @@ jobs:
     if: needs.release.outputs.should_release == 'true'
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           ref: ${{ needs.release.outputs.version }}
           fetch-depth: 0
@@ -88,7 +88,7 @@ jobs:
     if: needs.release.outputs.should_release == 'true'
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           ref: ${{ needs.release.outputs.version }}
       - name: Setup Deno
@@ -111,7 +111,7 @@ jobs:
       NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           ref: ${{ needs.release.outputs.version }}
       - name: Setup Deno
