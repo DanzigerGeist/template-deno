@@ -91,8 +91,8 @@
       "command": "deno install --frozen"
     },
     "check:docs": {
-      "description": "Lint JSDoc and validate doc code blocks",
-      "command": "deno doc --lint src/ && deno check --doc-only src/"
+      "description": "Lint JSDoc and run doc code blocks as tests",
+      "command": "deno doc --lint src/ && deno test --doc src/"
     },
     "check:format": {
       "description": "Validate code formatting",
