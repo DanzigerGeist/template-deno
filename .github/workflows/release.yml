@@ -95,6 +95,7 @@ jobs:
         uses: denoland/setup-deno@v2
         with:
           deno-version: 2.x
+          cache: true
       - name: Publish
         run: deno publish
 
@@ -118,6 +119,7 @@ jobs:
         uses: denoland/setup-deno@v2
         with:
           deno-version: 2.x
+          cache: true
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
