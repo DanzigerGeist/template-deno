@@ -126,6 +126,8 @@ jobs:
           cache: true
       - name: Run tests
         run: deno test tests/ --coverage=.coverage --parallel --quiet --fail-fast --allow-all --permit-no-files
+      - name: Coverage
+        run: deno task coverage
 
   audit:
     name: Audit

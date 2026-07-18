@@ -126,6 +126,10 @@
       "description": "Run type checking with plain deno check",
       "command": "deno check"
     },
+    "coverage": {
+      "description": "Report coverage and enforce the 80% line/branch/function threshold",
+      "command": "deno coverage .coverage --threshold=80"
+    },
     "docs": {
       "description": "Generate HTML docs into docs/",
       "command": "deno doc --lint --html --output=docs src/"
