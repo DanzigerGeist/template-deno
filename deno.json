@@ -19,7 +19,7 @@
   "coverage": {
     "thresholds": {
       "branches": 80,
-      "functions": 80,
+      "functions": 100,
       "lines": 80
     }
   },
