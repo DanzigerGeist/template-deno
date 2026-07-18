@@ -1,22 +1,36 @@
 # Deno Project Template
 
 [![MIT License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
-[![CI](https://github.com/DanzigerGeist/template-deno/actions/workflows/pr-checks.yml/badge.svg)](https://github.com/DanzigerGeist/template-deno/actions/workflows/pr-checks.yml)
 
 A batteries-included Deno project template targeting JSR, npm, browser, and standalone binary distribution.
 
 ## Features
 
 - **Dual publish** — JSR and npm from a single codebase via [dnt](https://github.com/denoland/dnt)
-- **Browser & Node bundles** — IIFE and ESM builds with optional obfuscation
-- **Standalone binary** — `deno compile` output ready to ship
-- **Quality gates** — formatting, linting, type checking, and doc validation
-- **Testing & benchmarks** — parallel test runner with coverage, built-in benchmark support
+- **Browser & Node bundles** — IIFE and ESM builds with optional obfuscation, plus a `deno compile` binary
+- **Quality gates** — formatting, linting, type checking, and doc examples executed as real tests
+- **Enforced coverage** — 80% lines, 80% branches, 100% functions, configured in `deno.json`
 - **Security scanning** — dependency audit (`deno audit`) and secret detection
   ([gitleaks](https://github.com/gitleaks/gitleaks))
-- **Conventional Commits** — enforced via [Cocogitto](https://docs.cocogitto.io/) git hooks
+- **Conventional Commits** — [Cocogitto](https://docs.cocogitto.io/) git hooks locally, commitlint in CI
 - **Automated releases** — changelog generation, version bumping, and CI-driven publish on merge to master
-- **CI/CD** — GitHub Actions for PR checks and releases
+- **AI-ready** — agent guidance in [`AGENTS.md`](AGENTS.md), imported by `CLAUDE.md`
+- **Cross-platform** — the whole task suite runs on Linux, macOS, and Windows
+
+## Prerequisites
+
+| Tool                                             | Purpose                                 | macOS / Linux            | Windows                            |
+| ------------------------------------------------ | --------------------------------------- | ------------------------ | ---------------------------------- |
+| [Deno](https://docs.deno.com/runtime/) ≥ 2.8     | Runtime, toolchain, and task runner     | `brew install deno`      | `winget install DenoLand.Deno`     |
+| [Cocogitto](https://docs.cocogitto.io/)          | Git hooks and commit validation         | `brew install cocogitto` | `cargo install cocogitto`          |
+| [gitleaks](https://github.com/gitleaks/gitleaks) | Local secret scanning (`make security`) | `brew install gitleaks`  | `scoop install gitleaks`           |
+| [Node.js](https://nodejs.org/) + npm             | npm package verification and publishing | `brew install node`      | `winget install OpenJS.NodeJS.LTS` |
+| make _(optional)_                                | Shorthand for `deno task` commands      | preinstalled             | `scoop install make`               |
+| [gh](https://cli.github.com/) _(optional)_       | Creating a repository from the template | `brew install gh`        | `winget install GitHub.cli`        |
+
+Every command is also available directly through `deno task`, which uses Deno's built-in cross-platform shell — `make`
+is a convenience layer, not a requirement. Line endings are forced to LF via `.gitattributes`, so formatting checks
+behave identically on Windows.
 
 ## Quick Start
 
@@ -32,6 +46,9 @@ make setup
 make check && make test
 ```
 
+After creating a project from the template: change `name` and `repository` in `deno.json`, claim your JSR scope before
+the first release, and enable branch protection on `master`.
+
 ## Project Structure
 
 ```
@@ -42,13 +59,18 @@ make check && make test
 │   └── mod.ts
 ├── tests/               # Test suite
 │   └── mod.test.ts
-├── .github/workflows/   # CI/CD pipelines
-│   ├── pr-checks.yml    # PR quality gates
-│   └── release.yml      # CI-driven release & publish on push to master
-├── deno.json            # Project config, tasks, and dependencies
+├── .github/
+│   ├── workflows/
+│   │   ├── pr-checks.yml    # PR quality gates
+│   │   └── release.yml      # CI-driven release & publish on push to master
+│   └── dependabot.yml       # Dependency update automation (Deno + GitHub Actions)
+├── AGENTS.md            # Guidance for AI agents
+├── CLAUDE.md            # Claude Code entrypoint (imports AGENTS.md)
+├── deno.json            # Project config, tasks, dependencies, coverage thresholds
 ├── cog.toml             # Cocogitto config (versioning, hooks, changelog)
 ├── Makefile             # Simplified command interface
 ├── .editorconfig        # Editor formatting rules
+├── .gitattributes       # Forces LF line endings on every platform
 └── LICENSE              # MIT
 ```
 
@@ -72,23 +94,21 @@ The `Makefile` provides a simplified interface over `deno task`:
 | `make version`   | Print package metadata     |
 | `make help`      | List all targets           |
 
-For granular control, use `deno task` directly — run `deno task` with no arguments to see all available tasks.
+For granular control, use `deno task` directly — run `deno task` with no arguments to see all available tasks. Build
+artifacts land in `target/`: npm package (`target/npm/`), browser and Node bundles (`target/bundle/`), and a standalone
+executable (`target/binary/`).
 
-## Build Targets
+## Conventions
 
-The template produces several build artifacts under `target/`:
-
-| Target                   | Output                                      | Description                                     |
-| ------------------------ | ------------------------------------------- | ----------------------------------------------- |
-| **JSR**                  | (registry)                                  | Native Deno package on [jsr.io](https://jsr.io) |
-| **npm**                  | `target/npm/`                               | Node-compatible package via dnt                 |
-| **Browser bundle**       | `target/bundle/index.browser.js`            | Minified IIFE for `<script>` tags               |
-| **Node bundle**          | `target/bundle/index.node.js`               | Minified ESM for Node.js                        |
-| **Binary**               | `target/binary/app`                         | Standalone executable via `deno compile`        |
-| **Obfuscated (browser)** | `target/bundle/index.browser.obfuscated.js` | Obfuscated browser bundle                       |
-| **Obfuscated (node)**    | `target/bundle/index.node.obfuscated.js`    | Obfuscated node bundle                          |
-
-Run `deno task` to see the corresponding task name for each target.
+- **Conventional Commits** — enforced by the Cog `commit-msg` hook locally and by commitlint in CI.
+- **All dependencies live in the `deno.json` `imports` map** — source files use bare specifiers only; no inline
+  `npm:`/`jsr:` specifiers in code.
+- **No `node_modules`** — prefer `jsr:` packages, use `npm:` only when no JSR alternative exists.
+- **Coverage thresholds** — 80% lines, 80% branches, 100% functions; configured under `coverage.thresholds` in
+  `deno.json`.
+- **Formatting and linting** — `deno fmt` / `deno lint`, line width 120.
+- **Documentation** — every exported symbol needs JSDoc; public functions ship a runnable `@example` executed as a real
+  test in CI.
 
 ## CI/CD
 
@@ -96,14 +116,15 @@ Run `deno task` to see the corresponding task name for each target.
 
 Every pull request runs the following jobs (`.github/workflows/pr-checks.yml`):
 
-- **Commits** — validates conventional commit messages via Cocogitto
-- **Dependencies** — verifies lockfile integrity (`deno install --frozen`)
+- **Commits** — validates conventional commit messages (commitlint)
+- **Dependencies** — strict lockfile install (`deno ci`)
 - **Format** — checks code formatting (`deno fmt --check`)
 - **Lint** — runs lint rules (`deno lint`)
 - **Types** — type-checks the project (`deno check`)
-- **Docs** — validates JSDoc and doc code blocks
-- **Test** — runs the test suite with coverage
-- **Security** — audits dependencies for known vulnerabilities
+- **Docs** — lints JSDoc and executes doc examples as tests (`deno doc --lint`, `deno test --doc`)
+- **Test** — runs the test suite and enforces the coverage thresholds
+- **Audit** — audits dependencies for known vulnerabilities (`deno audit`)
+- **Secrets** — scans the full Git history for leaked credentials (gitleaks)
 
 ### Releases
 
@@ -124,7 +145,8 @@ When releasable commits are found (`feat:`, `fix:`, breaking changes), CI automa
 3. Publishes to JSR (`deno publish`)
 4. Builds and publishes to npm (`npm publish`)
 
-Non-releasable commits (`chore:`, `docs:`, etc.) are silently skipped.
+Non-releasable commits (`chore:`, `docs:`, etc.) are silently skipped. The template repository itself never releases —
+the release job is guarded by `github.event.repository.is_template`.
 
 ## Customization Recipes
 
@@ -183,11 +205,13 @@ The simplest setup — a library targeting only Deno consumers.
 
 ## Configuration
 
-| File            | Purpose                                                                            |
-| --------------- | ---------------------------------------------------------------------------------- |
-| `deno.json`     | Project metadata, dependencies, tasks, compiler options, fmt/lint/publish rules    |
-| `cog.toml`      | Cocogitto settings — version tag prefix, pre-bump hooks, changelog path, git hooks |
-| `.editorconfig` | Cross-editor formatting (indent style, charset, line endings)                      |
+| File             | Purpose                                                                            |
+| ---------------- | ---------------------------------------------------------------------------------- |
+| `deno.json`      | Project metadata, dependencies, tasks, compiler options, coverage thresholds       |
+| `cog.toml`       | Cocogitto settings — version tag prefix, pre-bump hooks, changelog path, git hooks |
+| `AGENTS.md`      | Working agreements for AI agents (commands, conventions, boundaries)               |
+| `.gitattributes` | Forces LF line endings — keeps `deno fmt` consistent across platforms              |
+| `.editorconfig`  | Cross-editor formatting (indent style, charset, line endings)                      |
 
 ## License
 
