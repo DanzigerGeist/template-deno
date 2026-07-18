@@ -12,10 +12,7 @@
     ".": "./src/mod.ts"
   },
   "compilerOptions": {
-    "lib": [
-      "deno.window",
-      "dom"
-    ]
+    "noUncheckedIndexedAccess": true
   },
   "tasks": {
     "benchmark": {
