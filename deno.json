@@ -16,6 +16,13 @@
   "compilerOptions": {
     "noUncheckedIndexedAccess": true
   },
+  "coverage": {
+    "thresholds": {
+      "branches": 80,
+      "functions": 80,
+      "lines": 80
+    }
+  },
   "tasks": {
     "benchmark": {
       "description": "Run benchmarks",
@@ -127,8 +134,8 @@
       "command": "deno check"
     },
     "coverage": {
-      "description": "Report coverage and enforce the 80% line/branch/function threshold",
-      "command": "deno coverage .coverage --threshold=80"
+      "description": "Report coverage and enforce the thresholds configured in deno.json",
+      "command": "deno coverage .coverage"
     },
     "docs": {
       "description": "Generate HTML docs into docs/",
