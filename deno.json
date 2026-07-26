@@ -134,8 +134,8 @@
       "command": "deno task check:publish:jsr && deno task check:publish:npm"
     },
     "check:types": {
-      "description": "Run type checking with plain deno check",
-      "command": "deno check"
+      "description": "Run type checking, including code blocks in JSDoc",
+      "command": "deno check --doc"
     },
     "coverage": {
       "description": "Report coverage and enforce the thresholds configured in deno.json",
