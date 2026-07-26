@@ -142,7 +142,7 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: 22
+          node-version: 24
           registry-url: https://npm.pkg.github.com
       - name: Build npm package
         run: deno task build:npm
