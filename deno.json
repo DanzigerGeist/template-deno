@@ -240,12 +240,6 @@
   ],
   "fmt": {
     "lineWidth": 120,
-    "include": [
-      "benchmarks/",
-      "README.md",
-      "src/",
-      "tests/"
-    ],
     "exclude": [
       ".coverage/",
       "docs/",
