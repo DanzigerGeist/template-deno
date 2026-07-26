@@ -34,11 +34,11 @@ every failure is reported at once.
   `npm:`/`jsr:` specifiers in code.
 - **Avoid `node_modules` in every possible case** — prefer `jsr:` packages, use `npm:` only when no JSR alternative
   exists, and never set `nodeModulesDir`.
-- **Coverage thresholds** are configured in `deno.json`: 80% lines, 80% branches, 100% functions — every function must
-  be exercised by tests.
+- **Coverage thresholds** are configured in `deno.json`: 80% lines, 80% branches, 100% functions. The report only covers
+  modules the tests actually load, so a source file nothing imports is invisible to it rather than a failure.
 - Formatting and linting follow `deno fmt` / `deno lint` (line width 120).
-- Every exported symbol needs JSDoc; public functions ship a runnable `@example` — doc examples are executed as real
-  tests in CI.
+- Every exported symbol needs JSDoc — `deno doc --lint` enforces this. A runnable `@example` on public functions is
+  strongly encouraged but not enforced; any you do write are compiled and executed as real tests in CI.
 - The npm package is type-checked against Node's type environment by `build:npm` (dnt `typeCheck`). A browser-targeted
   fork that needs DOM globals adds `compilerOptions: { lib: ['ESNext', 'DOM'] }` to the dnt build options rather than
   disabling the check.
