@@ -56,7 +56,7 @@
     },
     "build:npm": {
       "description": "Build npm package into target/npm using dnt",
-      "command": "deno eval \"const cfg = JSON.parse(await Deno.readTextFile('deno.json')); const { build, emptyDir } = await import('@deno/dnt'); await emptyDir('./target/npm'); await build({ entryPoints: ['./src/mod.ts'], outDir: './target/npm', shims: { deno: true }, scriptModule: false, typeCheck: false, declaration: 'separate', test: false, package: { name: cfg.name, version: cfg.version, description: cfg.description, license: cfg.license, repository: { type: 'git', url: cfg.repository } }, postBuild() { Deno.copyFileSync('README.md', 'target/npm/README.md'); Deno.copyFileSync('LICENSE', 'target/npm/LICENSE'); } });\""
+      "command": "deno eval \"const cfg = JSON.parse(await Deno.readTextFile('deno.json')); const { build, emptyDir } = await import('@deno/dnt'); await emptyDir('./target/npm'); await build({ entryPoints: ['./src/mod.ts'], outDir: './target/npm', shims: { deno: true }, scriptModule: false, typeCheck: 'single', declaration: 'separate', test: false, package: { name: cfg.name, version: cfg.version, description: cfg.description, license: cfg.license, repository: { type: 'git', url: cfg.repository } }, postBuild() { Deno.copyFileSync('README.md', 'target/npm/README.md'); Deno.copyFileSync('LICENSE', 'target/npm/LICENSE'); } });\""
     },
     "clean": {
       "description": "Remove cache and generated artifacts",
