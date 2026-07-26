@@ -37,8 +37,9 @@ For AI-assisted work, the official [denoland/skills](https://github.com/denoland
 - The npm package is type-checked against Node's type environment by `build:npm` (dnt `typeCheck`). A browser-targeted
   fork that needs DOM globals adds `compilerOptions: { lib: ['ESNext', 'DOM'] }` to the dnt build options rather than
   disabling the check.
-- Tests and benchmarks run sandboxed — no permission flags at all. A test that needs I/O grants it narrowly
-  (`--allow-read=./tests/fixtures`) or per test via `Deno.test({ permissions: { read: [...] } })`; never re-add
+- Tests and benchmarks run sandboxed — the `test`, `test:fast` and `benchmark` tasks pass no permission flags. A test
+  that needs I/O adds the narrowest flag to the task itself (e.g. `--allow-read=./tests/fixtures`);
+  `Deno.test({ permissions: ... })` can only narrow what the task already grants, never add to it. Never re-add
   `--allow-all`.
 
 ## Boundaries
