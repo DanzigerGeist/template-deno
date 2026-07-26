@@ -127,7 +127,7 @@
       "command": "deno lint"
     },
     "check:publish:jsr": {
-      "description": "Verify JSR publish flow with a dry-run",
+      "description": "Verify JSR publish flow with a dry-run, allowing a dirty working tree",
       "command": "deno publish --dry-run --allow-dirty"
     },
     "check:publish:npm": {
