@@ -37,7 +37,7 @@
       "dependencies": [
         "build:bundle:browser"
       ],
-      "command": "deno run -A npm:javascript-obfuscator target/bundle/index.browser.js --output target/bundle/index.browser.obfuscated.js --compact true --control-flow-flattening true --split-strings true --string-array true --string-array-encoding base64 --unicode-escape-sequence true --target browser"
+      "command": "deno run --no-lock --allow-read=. --allow-write=target --allow-env npm:javascript-obfuscator@^5.5.0 target/bundle/index.browser.js --output target/bundle/index.browser.obfuscated.js --compact true --control-flow-flattening true --split-strings true --string-array true --string-array-encoding base64 --unicode-escape-sequence true --target browser"
     },
     "build:bundle:node": {
       "description": "Build node-compatible bundle into target/bundle/index.node.js",
@@ -48,7 +48,7 @@
       "dependencies": [
         "build:bundle:node"
       ],
-      "command": "deno run -A npm:javascript-obfuscator target/bundle/index.node.js --output target/bundle/index.node.obfuscated.js --compact true --control-flow-flattening true --split-strings true --string-array true --string-array-encoding base64 --unicode-escape-sequence true --target node"
+      "command": "deno run --no-lock --allow-read=. --allow-write=target --allow-env npm:javascript-obfuscator@^5.5.0 target/bundle/index.node.js --output target/bundle/index.node.obfuscated.js --compact true --control-flow-flattening true --split-strings true --string-array true --string-array-encoding base64 --unicode-escape-sequence true --target node"
     },
     "build:binary": {
       "description": "Compile standalone binary into target/binary/app",
