@@ -71,7 +71,7 @@
       "command": "deno eval \"const cfg = JSON.parse(await Deno.readTextFile('deno.json')); const { build, emptyDir } = await import('@deno/dnt'); await emptyDir('./target/npm'); await build({ entryPoints: ['./src/mod.ts'], outDir: './target/npm', shims: { deno: true }, scriptModule: false, typeCheck: 'single', declaration: 'separate', test: false, package: { name: cfg.name, version: cfg.version, description: cfg.description, license: cfg.license, repository: { type: 'git', url: cfg.repository } }, postBuild() { Deno.copyFileSync('README.md', 'target/npm/README.md'); Deno.copyFileSync('LICENSE', 'target/npm/LICENSE'); } });\""
     },
     "clean": {
-      "description": "Remove cache and generated artifacts",
+      "description": "Remove generated artifacts and the machine-global Deno cache",
       "dependencies": [
         "clean:cache",
         "clean:coverage",
@@ -80,7 +80,7 @@
       ]
     },
     "clean:cache": {
-      "description": "Clear Deno cache",
+      "description": "Clear the machine-global Deno cache, affecting every Deno project on this machine",
       "command": "deno clean"
     },
     "clean:coverage": {

@@ -40,7 +40,7 @@ docs: ## 📚 Generate docs
 update: ## 🔄 Update dependencies
 	@$(DENO_TASK) update
 
-clean: ## 🧹 Clean generated artifacts
+clean: ## 🧹 Clean generated artifacts and the machine-global Deno cache
 	@$(DENO_TASK) clean
 
 version: ## 📦 Print package metadata
