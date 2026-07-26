@@ -213,7 +213,11 @@
       "command": "deno install --frozen=false"
     },
     "test": {
-      "description": "Run test suite",
+      "description": "Run test suite, reporting every failure",
+      "command": "deno test tests/ --coverage=.coverage --parallel --quiet --no-prompt --permit-no-files"
+    },
+    "test:fast": {
+      "description": "Run test suite, stopping at the first failure",
       "command": "deno test tests/ --coverage=.coverage --parallel --quiet --fail-fast --no-prompt --permit-no-files"
     },
     "update": {
