@@ -108,7 +108,24 @@ jobs:
           deno-version: 2.x
           cache: true
       - name: Check docs
-        run: deno doc --lint src/ && deno test --doc src/ README.md
+        run: deno doc --lint src/
+
+  examples:
+    name: Examples
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    needs:
+      - dependencies
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+      - name: Setup Deno
+        uses: denoland/setup-deno@v2
+        with:
+          deno-version: 2.x
+          cache: true
+      - name: Check examples
+        run: deno test --doc src/ README.md
 
   test:
     name: Test
@@ -127,7 +144,7 @@ jobs:
       - name: Run tests
         run: deno test tests/ --coverage=.coverage --parallel --quiet --no-prompt --permit-no-files
       - name: Coverage
-        run: deno task coverage
+        run: deno coverage .coverage
 
   publish-jsr:
     name: Publish dry-run (JSR)
@@ -182,7 +199,7 @@ jobs:
           deno-version: 2.x
           cache: true
       - name: Audit dependencies
-        run: deno task security:vulnerabilities
+        run: deno audit --frozen --level=high
 
   secrets:
     name: Secrets

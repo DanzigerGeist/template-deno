@@ -100,6 +100,7 @@
       "dependencies": [
         "check:dependencies",
         "check:docs",
+        "check:examples",
         "check:format",
         "check:lint",
         "check:types"
@@ -110,8 +111,12 @@
       "command": "deno ci"
     },
     "check:docs": {
-      "description": "Lint JSDoc and run doc code blocks from source and README as tests",
-      "command": "deno doc --lint src/ && deno test --doc src/ README.md"
+      "description": "Lint JSDoc for completeness across exported symbols",
+      "command": "deno doc --lint src/"
+    },
+    "check:examples": {
+      "description": "Type-check and run documentation examples from source and README",
+      "command": "deno test --doc src/ README.md"
     },
     "check:format": {
       "description": "Validate code formatting",
@@ -137,9 +142,10 @@
       "dependencies": [
         "check",
         "test",
-        "security"
-      ],
-      "command": "deno task check:publish:jsr && deno task check:publish:npm"
+        "security",
+        "check:publish:jsr",
+        "check:publish:npm"
+      ]
     },
     "check:types": {
       "description": "Run type checking, including code blocks in JSDoc",
