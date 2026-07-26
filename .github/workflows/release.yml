@@ -20,6 +20,7 @@ jobs:
       contents: read
       pull-requests: read
     uses: ./.github/workflows/pr-checks.yml
+    secrets: inherit
 
   release:
     name: Release

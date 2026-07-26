@@ -134,6 +134,9 @@ Every pull request runs the following jobs (`.github/workflows/pr-checks.yml`):
 - **Audit** — audits dependencies for known vulnerabilities (`deno audit`)
 - **Secrets** — scans the full Git history for leaked credentials (gitleaks)
 
+Repositories owned by a GitHub **organization** must supply a `GITLEAKS_LICENSE` secret — without it the gitleaks action
+exits before scanning. Personal accounts need no license and can ignore this.
+
 ### Releases
 
 The release workflow (`.github/workflows/release.yml`) triggers on every push to `master`. It uses
