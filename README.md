@@ -46,8 +46,11 @@ make setup
 make check && make test
 ```
 
-After creating a project from the template: change `name` and `repository` in `deno.json`, claim your JSR scope before
-the first release, and enable branch protection on `master`.
+`make check` is the fast inner loop. Before pushing, run `make ci` — it runs everything CI runs.
+
+After creating a project from the template: change `name` and `repository` in `deno.json`, update the matching import
+specifier in the `src/mod.ts` JSDoc `@example` blocks (they are compiled and executed as tests), claim your JSR scope
+before the first release, and enable branch protection on `master`.
 
 ## Project Structure
 
@@ -79,21 +82,22 @@ the first release, and enable branch protection on `master`.
 
 The `Makefile` provides a simplified interface over `deno task`:
 
-| Command          | Description                |
-| ---------------- | -------------------------- |
-| `make setup`     | Install deps and git hooks |
-| `make format`    | Format code                |
-| `make check`     | Run all quality checks     |
-| `make test`      | Run test suite             |
-| `make security`  | Run security scans         |
-| `make build`     | Build all targets          |
-| `make benchmark` | Run benchmarks             |
-| `make docs`      | Generate HTML docs         |
-| `make publish`   | Publish to JSR and npm     |
-| `make update`    | Update dependencies        |
-| `make clean`     | Remove generated artifacts |
-| `make version`   | Print package metadata     |
-| `make help`      | List all targets           |
+| Command          | Description                                |
+| ---------------- | ------------------------------------------ |
+| `make setup`     | Install deps and git hooks                 |
+| `make format`    | Format code                                |
+| `make check`     | Run fast quality checks                    |
+| `make ci`        | Run every check CI runs                    |
+| `make test`      | Run test suite                             |
+| `make security`  | Run security scans                         |
+| `make build`     | Build all targets                          |
+| `make benchmark` | Run benchmarks                             |
+| `make docs`      | Generate HTML docs                         |
+| `make publish`   | Publish to JSR and npm                     |
+| `make update`    | Update dependencies                        |
+| `make clean`     | Remove artifacts and the global Deno cache |
+| `make version`   | Print package metadata                     |
+| `make help`      | List all targets                           |
 
 For granular control, use `deno task` directly — run `deno task` with no arguments to see all available tasks. Build
 artifacts land in `target/`: npm package (`target/npm/`), browser and Node bundles (`target/bundle/`), and a standalone
@@ -121,9 +125,12 @@ Every pull request runs the following jobs (`.github/workflows/pr-checks.yml`):
 - **Dependencies** — strict lockfile install (`deno ci`)
 - **Format** — checks code formatting (`deno fmt --check`)
 - **Lint** — runs lint rules (`deno lint`)
-- **Types** — type-checks the project (`deno check`)
-- **Docs** — lints JSDoc and executes doc examples as tests (`deno doc --lint`, `deno test --doc`)
+- **Types** — type-checks the project including JSDoc code blocks (`deno check --doc`)
+- **Docs** — lints JSDoc for completeness across exported symbols (`deno doc --lint src/`)
+- **Examples** — compiles and runs the JSDoc and README code blocks as tests (`deno test --doc src/ README.md`)
 - **Test** — runs the test suite and enforces the coverage thresholds
+- **Publish dry-run (JSR)** — verifies the package publishes cleanly (`deno publish --dry-run`)
+- **Publish dry-run (npm)** — builds the npm package with dnt and verifies it packages (`npm publish --dry-run`)
 - **Audit** — audits dependencies for known vulnerabilities (`deno audit`)
 - **Secrets** — scans the full Git history for leaked credentials (gitleaks)
 
@@ -145,6 +152,9 @@ When releasable commits are found (`feat:`, `fix:`, breaking changes), CI automa
 2. Creates a GitHub Release with auto-generated changelog
 3. Publishes to JSR (`deno publish`)
 4. Builds and publishes to npm (`npm publish`)
+
+Nothing is published unless the full PR check suite passes first — `release.yml` invokes `pr-checks.yml` via
+`workflow_call` and the release job depends on it.
 
 Non-releasable commits (`chore:`, `docs:`, etc.) are silently skipped. The template repository itself never releases —
 the release job is guarded by `github.event.repository.is_template`.
@@ -170,10 +180,14 @@ The most common case — a reusable package published to both registries.
 A command-line application distributed as a compiled executable. Users install via `deno install` (JSR) or download the
 binary directly.
 
-**Remove** from `deno.json` tasks: `build:bundle:*`, `build:npm`, `publish:npm`, and the obfuscation tasks.\
+**Remove** from `deno.json` tasks: `build:bundle:*`, `build:npm`, `publish:npm`, `check:publish:npm` (also drop it from
+the `check:publish` dependency list), and the obfuscation tasks.\
 **Remove** from `Makefile`: the bundle/npm lines inside the `build` target.\
-**Remove** from `release.yml`: the `publish-npm` job.\
+**Remove** the `publish-npm` job from both `release.yml` and `pr-checks.yml`.\
 **Keep**: `build:binary`, `publish:jsr`.
+
+> A CLI needs to write to stdout, so drop `no-console` from `lint.rules.include` in `deno.json` — it is enabled by
+> default and will fail the lint check on your first `console.log`.
 
 > You may also want to add cross-compilation targets and attach binaries to GitHub Releases as assets.
 
@@ -184,8 +198,9 @@ binary directly.
 
 A minified JS file meant to be loaded via `<script>` tag or bundled into a larger app.
 
-**Remove** from `deno.json` tasks: `build:binary`, `build:bundle:node`, `build:npm`, `publish:npm`.\
-**Remove** from `release.yml`: the `publish-npm` job.\
+**Remove** from `deno.json` tasks: `build:binary`, `build:bundle:node`, `build:npm`, `publish:npm`, `check:publish:npm`
+(also drop it from the `check:publish` dependency list).\
+**Remove** the `publish-npm` job from both `release.yml` and `pr-checks.yml`.\
 **Keep**: `build:bundle:browser` (and optionally the obfuscated variant), `publish:jsr`.
 
 > If you want the bundle available on CDNs like unpkg/jsdelivr, keep npm publish — those CDNs mirror npm.
@@ -197,10 +212,12 @@ A minified JS file meant to be loaded via `<script>` tag or bundled into a large
 
 The simplest setup — a library targeting only Deno consumers.
 
-**Remove** from `deno.json` tasks: all `build:*` tasks and `publish:npm`.\
+**Remove** from `deno.json` tasks: all `build:*` tasks, `publish:npm`, and `check:publish:npm` (also drop it from the
+`check:publish` dependency list).\
 **Remove** from `deno.json` imports: `@deno/dnt`.\
 **Remove** from `Makefile`: all lines inside the `build` target except the recipe itself.\
-**Remove** from `release.yml`: the `publish-npm` job.
+**Remove** the `publish-npm` job from both `release.yml` and `pr-checks.yml`.\
+**Then** run `deno install` to regenerate `deno.lock` — removing an import leaves it stale and `deno ci` will fail.
 
 </details>
 
