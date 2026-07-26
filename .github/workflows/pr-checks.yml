@@ -129,6 +129,44 @@ jobs:
       - name: Coverage
         run: deno task coverage
 
+  publish-jsr:
+    name: Publish dry-run (JSR)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    needs:
+      - dependencies
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+      - name: Setup Deno
+        uses: denoland/setup-deno@v2
+        with:
+          deno-version: 2.x
+          cache: true
+      - name: Verify JSR publish
+        run: deno publish --dry-run
+
+  publish-npm:
+    name: Publish dry-run (npm)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    needs:
+      - dependencies
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+      - name: Setup Deno
+        uses: denoland/setup-deno@v2
+        with:
+          deno-version: 2.x
+          cache: true
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Verify npm publish
+        run: deno task check:publish:npm
+
   audit:
     name: Audit
     runs-on: ubuntu-latest

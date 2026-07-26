@@ -287,6 +287,8 @@
       ".editorconfig",
       ".gitattributes",
       ".github/",
+      "AGENTS.md",
+      "CLAUDE.md",
       "Makefile",
       "benchmarks/",
       "cog.toml",
