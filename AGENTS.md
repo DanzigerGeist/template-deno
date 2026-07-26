@@ -54,6 +54,8 @@ Always:
 - Run `make check` and `make test` before preparing a commit, and `make ci` before pushing — the pre-push hook runs
   `check`, `test:fast` and `security`.
 - Keep `deno.lock` in sync — `deno task check:dependencies` verifies it.
+- Treat a clean `deno audit` as evidence about npm dependencies only — it queries the npm registry and does not inspect
+  `jsr:` packages, so on a JSR-only dependency tree it reports success without checking anything.
 
 Ask first:
 

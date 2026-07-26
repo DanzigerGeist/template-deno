@@ -10,7 +10,7 @@ A batteries-included Deno project template targeting JSR, npm, browser, and stan
 - **Browser & Node bundles** — IIFE and ESM builds with optional obfuscation, plus a `deno compile` binary
 - **Quality gates** — formatting, linting, type checking, and doc examples executed as real tests
 - **Enforced coverage** — 80% lines, 80% branches, 100% functions, configured in `deno.json`
-- **Security scanning** — dependency audit (`deno audit`) and secret detection
+- **Security scanning** — npm dependency audit (`deno audit`) and secret detection
   ([gitleaks](https://github.com/gitleaks/gitleaks))
 - **Conventional Commits** — [Cocogitto](https://docs.cocogitto.io/) git hooks locally, commitlint in CI
 - **Automated releases** — changelog generation, version bumping, and CI-driven publish on merge to master
@@ -133,7 +133,7 @@ Every pull request runs the following jobs (`.github/workflows/pr-checks.yml`):
 - **Test** — runs the test suite and enforces the coverage thresholds
 - **Publish dry-run (JSR)** — verifies the package publishes cleanly (`deno publish --dry-run`)
 - **Publish dry-run (npm)** — builds the npm package with dnt and verifies it packages (`npm publish --dry-run`)
-- **Audit** — audits dependencies for known vulnerabilities (`deno audit`)
+- **Audit** — audits npm dependencies for known vulnerabilities (`deno audit`); JSR packages are not covered
 - **Secrets** — scans the full Git history for leaked credentials (gitleaks)
 
 Repositories owned by a GitHub **organization** must supply a `GITLEAKS_LICENSE` secret — without it the gitleaks action
