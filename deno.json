@@ -20,6 +20,10 @@
     "noPropertyAccessFromIndexSignature": true,
     "noUncheckedIndexedAccess": true
   },
+  "test": {
+    "sanitizeOps": true,
+    "sanitizeResources": true
+  },
   "coverage": {
     "thresholds": {
       "branches": 80,
