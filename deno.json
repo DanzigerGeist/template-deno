@@ -137,7 +137,7 @@
       "description": "Verify dry-run publish flows for JSR and npm",
       "dependencies": [
         "check",
-        "test",
+        "coverage",
         "security",
         "check:publish:jsr",
         "check:publish:npm"
@@ -149,7 +149,10 @@
     },
     "coverage": {
       "description": "Report coverage and enforce the thresholds configured in deno.json",
-      "command": "deno coverage .coverage"
+      "command": "deno coverage .coverage",
+      "dependencies": [
+        "test"
+      ]
     },
     "docs": {
       "description": "Generate HTML docs into docs/",
