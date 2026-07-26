@@ -3,6 +3,7 @@ name: Release
 on:
   push:
     branches: [master]
+  workflow_dispatch:
 
 concurrency:
   group: release
@@ -36,6 +37,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v7
         with:
+          ref: master
           fetch-depth: 0
       - name: Setup Deno
         uses: denoland/setup-deno@v2
