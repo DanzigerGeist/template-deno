@@ -42,7 +42,7 @@
     },
     "build:bundle:browser": {
       "description": "Build browser bundle into target/bundle/index.browser.js",
-      "command": "mkdir -p target/bundle && deno bundle --platform=browser --format=iife --minify src/mod.ts > target/bundle/index.browser.js"
+      "command": "mkdir -p target/bundle && deno bundle --check --platform=browser --format=iife --minify src/mod.ts > target/bundle/index.browser.js"
     },
     "build:bundle:browser:obfuscated": {
       "description": "Optionally obfuscate browser bundle into target/bundle/index.browser.obfuscated.js",
@@ -53,7 +53,7 @@
     },
     "build:bundle:node": {
       "description": "Build node-compatible bundle into target/bundle/index.node.js",
-      "command": "mkdir -p target/bundle && deno bundle --platform=deno --format=esm --minify src/mod.ts > target/bundle/index.node.js"
+      "command": "mkdir -p target/bundle && deno bundle --check --platform=deno --format=esm --minify src/mod.ts > target/bundle/index.node.js"
     },
     "build:bundle:node:obfuscated": {
       "description": "Optionally obfuscate node bundle into target/bundle/index.node.obfuscated.js",
