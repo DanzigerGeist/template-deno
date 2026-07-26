@@ -21,7 +21,7 @@ A batteries-included Deno project template targeting JSR, npm, browser, and stan
 
 | Tool                                             | Purpose                                 | macOS / Linux            | Windows                            |
 | ------------------------------------------------ | --------------------------------------- | ------------------------ | ---------------------------------- |
-| [Deno](https://docs.deno.com/runtime/) ≥ 2.8     | Runtime, toolchain, and task runner     | `brew install deno`      | `winget install DenoLand.Deno`     |
+| [Deno](https://docs.deno.com/runtime/) ≥ 2.9     | Runtime, toolchain, and task runner     | `brew install deno`      | `winget install DenoLand.Deno`     |
 | [Cocogitto](https://docs.cocogitto.io/)          | Git hooks and commit validation         | `brew install cocogitto` | `cargo install cocogitto`          |
 | [gitleaks](https://github.com/gitleaks/gitleaks) | Local secret scanning (`make security`) | `brew install gitleaks`  | `scoop install gitleaks`           |
 | [Node.js](https://nodejs.org/) + npm             | npm package verification and publishing | `brew install node`      | `winget install OpenJS.NodeJS.LTS` |
@@ -75,6 +75,7 @@ before the first release, and enable branch protection on `master`.
 ├── Makefile             # Simplified command interface
 ├── .editorconfig        # Editor formatting rules
 ├── .gitattributes       # Forces LF line endings on every platform
+├── .gitignore           # Ignored artifacts (target/, docs/, .coverage/)
 └── LICENSE              # MIT
 ```
 
@@ -139,8 +140,8 @@ exits before scanning. Personal accounts need no license and can ignore this.
 
 ### Releases
 
-The release workflow (`.github/workflows/release.yml`) triggers on every push to `master`. It uses
-[Cocogitto](https://docs.cocogitto.io/) for version management with
+The release workflow (`.github/workflows/release.yml`) triggers on every push to `master`, and can be run manually from
+the Actions tab. It uses [Cocogitto](https://docs.cocogitto.io/) for version management with
 [Conventional Commits](https://www.conventionalcommits.org/):
 
 ```
