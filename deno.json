@@ -13,10 +13,6 @@
   "exports": {
     ".": "./src/mod.ts"
   },
-  "lock": {
-    "path": "deno.lock",
-    "frozen": true
-  },
   "compilerOptions": {
     "exactOptionalPropertyTypes": true,
     "isolatedDeclarations": true,
@@ -216,7 +212,7 @@
     },
     "setup:dependencies": {
       "description": "Install project dependencies into Deno cache",
-      "command": "deno install --frozen=false"
+      "command": "deno install"
     },
     "test": {
       "description": "Run test suite, reporting every failure",
@@ -228,15 +224,15 @@
     },
     "update": {
       "description": "Update dependencies within current semver ranges",
-      "command": "deno outdated --update --frozen=false"
+      "command": "deno outdated --update"
     },
     "update:interactive": {
       "description": "Interactively choose dependency updates",
-      "command": "deno outdated --update --interactive --frozen=false"
+      "command": "deno outdated --update --interactive"
     },
     "update:latest": {
       "description": "Update dependencies to latest versions (ignore current semver ranges)",
-      "command": "deno outdated --update --latest --frozen=false"
+      "command": "deno outdated --update --latest"
     },
     "version": {
       "description": "Print package metadata from deno.json",
