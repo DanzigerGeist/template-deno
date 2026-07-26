@@ -245,16 +245,38 @@
     ]
   },
   "lint": {
-    "include": [
-      "benchmarks/",
-      "src/",
-      "tests/"
-    ],
     "exclude": [
       ".coverage/",
       "docs/",
       "target/"
-    ]
+    ],
+    "rules": {
+      "tags": [
+        "recommended",
+        "jsr",
+        "workspace"
+      ],
+      "include": [
+        "ban-untagged-todo",
+        "default-param-last",
+        "eqeqeq",
+        "explicit-module-boundary-types",
+        "no-console",
+        "no-eval",
+        "no-implicit-declare-namespace-export",
+        "no-node-globals",
+        "no-non-null-assertion",
+        "no-process-global",
+        "no-self-compare",
+        "no-sparse-arrays",
+        "no-sync-fn-in-async-fn",
+        "no-throw-literal",
+        "no-top-level-await",
+        "no-undef",
+        "no-useless-rename",
+        "triple-slash-reference"
+      ]
+    }
   },
   "publish": {
     "exclude": [
