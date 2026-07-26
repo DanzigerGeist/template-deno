@@ -12,11 +12,21 @@ permissions:
   contents: read
 
 jobs:
+  checks:
+    name: Checks
+    if: ${{ !github.event.repository.is_template }}
+    permissions:
+      contents: read
+      pull-requests: read
+    uses: ./.github/workflows/pr-checks.yml
+
   release:
     name: Release
     if: ${{ !github.event.repository.is_template }}
     runs-on: ubuntu-latest
     timeout-minutes: 10
+    needs:
+      - checks
     permissions:
       contents: write
     outputs:
