@@ -48,9 +48,10 @@ make check && make test
 
 `make check` is the fast inner loop. Before pushing, run `make ci` — it runs everything CI runs.
 
-After creating a project from the template: change `name` and `repository` in `deno.json`, update the matching import
-specifier in the `src/mod.ts` JSDoc `@example` blocks (they are compiled and executed as tests), claim your JSR scope
-before the first release, and enable branch protection on `master`.
+After creating a project from the template: change `name`, `description` and `repository` in `deno.json` — leave
+`version` alone, `cog bump` owns it, and `description` is copied verbatim into the published package. Then update the
+matching import specifier in the `src/mod.ts` JSDoc `@example` blocks (they are compiled and executed as tests), claim
+your JSR scope before the first release, and enable branch protection on `master`.
 
 ## Project Structure
 
@@ -188,6 +189,7 @@ binary directly.
 the `check:publish` dependency list), and the obfuscation tasks.\
 **Remove** from `Makefile`: the bundle/npm lines inside the `build` target.\
 **Remove** the `publish-npm` job from both `release.yml` and `pr-checks.yml`.\
+**Update** the `publish` task command — it hardcodes `deno task publish:jsr && deno task publish:npm`.\
 **Keep**: `build:binary`, `publish:jsr`.
 
 > A CLI needs to write to stdout, so drop `no-console` from `lint.rules.include` in `deno.json` — it is enabled by
@@ -205,6 +207,7 @@ A minified JS file meant to be loaded via `<script>` tag or bundled into a large
 **Remove** from `deno.json` tasks: `build:binary`, `build:bundle:node`, `build:npm`, `publish:npm`, `check:publish:npm`
 (also drop it from the `check:publish` dependency list).\
 **Remove** the `publish-npm` job from both `release.yml` and `pr-checks.yml`.\
+**Update** the `publish` task command — it hardcodes `deno task publish:jsr && deno task publish:npm`.\
 **Keep**: `build:bundle:browser` (and optionally the obfuscated variant), `publish:jsr`.
 
 > If you want the bundle available on CDNs like unpkg/jsdelivr, keep npm publish — those CDNs mirror npm.
@@ -221,6 +224,7 @@ The simplest setup — a library targeting only Deno consumers.
 **Remove** from `deno.json` imports: `@deno/dnt`.\
 **Remove** from `Makefile`: all lines inside the `build` target except the recipe itself.\
 **Remove** the `publish-npm` job from both `release.yml` and `pr-checks.yml`.\
+**Update** the `publish` task command — it hardcodes `deno task publish:jsr && deno task publish:npm`.\
 **Then** run `deno install` to regenerate `deno.lock` — removing an import leaves it stale and `deno ci` will fail.
 
 </details>
