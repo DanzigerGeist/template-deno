@@ -2,21 +2,25 @@
 
 [![MIT License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
-A Deno 2.x library template: one codebase, published to JSR and npm, bundled for browsers, compiled to a binary.
+A general-purpose Deno 2.x template with the quality gates, git hooks and CI already wired up. Start a library, a CLI, a
+browser bundle or a backend service, then delete the parts you do not need.
 
 ## Features
 
-- **Publishes to four targets**: JSR and npm from one codebase via [dnt](https://github.com/denoland/dnt), plus browser
-  and Node bundles (optionally obfuscated) and a `deno compile` binary
-- **Quality gates**: formatting, linting, type checking, and doc examples executed as real tests
+- **Quality gates**: formatting, linting, type checking, and doc examples compiled and executed as real tests
 - **Enforced coverage**: 80% lines, 80% branches, 100% functions, configured in `deno.json`
 - **Security scanning**: npm dependency audit (`deno audit`) and secret detection
   ([gitleaks](https://github.com/gitleaks/gitleaks))
+- **Ships to four targets** when you need them: JSR and npm via [dnt](https://github.com/denoland/dnt), browser and Node
+  bundles (optionally obfuscated), and a `deno compile` binary
 - **Releases itself**: [Conventional Commits](https://www.conventionalcommits.org/) drive the version bump, changelog,
   GitHub Release and publish on merge to `master`, via [Cocogitto](https://docs.cocogitto.io/) hooks locally and
   commitlint in CI
 - **AI-ready**: agent guidance in [`AGENTS.md`](AGENTS.md), imported by `CLAUDE.md`
 - **Cross-platform**: the whole task suite runs on Linux, macOS, and Windows
+
+Not every project needs the publishing and bundling half. The [Customization Recipes](#customization-recipes) below
+strip the template down to one of five shapes; the quality gates, hooks and CI stay in place whatever you build.
 
 ## Prerequisites
 
@@ -50,7 +54,7 @@ tests), claim your JSR scope before the first release, and enable branch protect
 
 ## Project Structure
 
-Library code lives in `src/` (`src/mod.ts` is the entrypoint declared in `exports`), tests in `tests/`, benchmarks in
+Source code lives in `src/` (`src/mod.ts` is the entrypoint declared in `exports`), tests in `tests/`, benchmarks in
 `benchmarks/`. Build output goes to `target/` and is git-ignored. Everything else at the root is configuration:
 
 | File             | Purpose                                                                                                      |
