@@ -1,4 +1,5 @@
 import { assertEquals, assertThrows } from "@std/assert";
+import { FakeTime } from "@std/testing/time";
 import { average, sum } from "../src/mod.ts";
 
 Deno.test("sum adds all values", () => {
@@ -19,4 +20,17 @@ Deno.test("average throws on an empty list", () => {
     Error,
     "Cannot compute average of an empty array.",
   );
+});
+
+Deno.test("FakeTime advances timers without waiting or leaking them", async () => {
+  using time = new FakeTime();
+  let fired = false;
+
+  setTimeout(() => {
+    fired = true;
+  }, 60_000);
+
+  await time.tickAsync(60_000);
+
+  assertEquals(fired, true);
 });
