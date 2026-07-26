@@ -37,6 +37,13 @@ plugin is recommended (`/plugin marketplace add denoland/skills`, then
 - Formatting and linting follow `deno fmt` / `deno lint` (line width 120).
 - Every exported symbol needs JSDoc; public functions ship a runnable
   `@example` — doc examples are executed as real tests in CI.
+- The npm package is type-checked against Node's type environment by `build:npm`
+  (dnt `typeCheck`). A browser-targeted fork that needs DOM globals adds
+  `compilerOptions: { lib: ['ESNext', 'DOM'] }` to the dnt build options rather
+  than disabling the check.
+- Tests and benchmarks run sandboxed — no permission flags at all. A test that
+  needs I/O grants it narrowly (`--allow-read=./tests/fixtures`) or per test via
+  `Deno.test({ permissions: { read: [...] } })`; never re-add `--allow-all`.
 
 ## Boundaries
 
