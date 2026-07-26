@@ -102,8 +102,8 @@
       "command": "deno ci"
     },
     "check:docs": {
-      "description": "Lint JSDoc and run doc code blocks as tests",
-      "command": "deno doc --lint src/ && deno test --doc src/"
+      "description": "Lint JSDoc and run doc code blocks from source and README as tests",
+      "command": "deno doc --lint src/ && deno test --doc src/ README.md"
     },
     "check:format": {
       "description": "Validate code formatting",

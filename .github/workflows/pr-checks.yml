@@ -108,7 +108,7 @@ jobs:
           deno-version: 2.x
           cache: true
       - name: Check docs
-        run: deno doc --lint src/ && deno test --doc src/
+        run: deno doc --lint src/ && deno test --doc src/ README.md
 
   test:
     name: Test
