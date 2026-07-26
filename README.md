@@ -94,7 +94,7 @@ Spelled out in full in [`AGENTS.md`](AGENTS.md), which applies to humans and age
 - **All dependencies live in the `deno.json` `imports` map**: source files use bare specifiers only, never inline
   `npm:`/`jsr:` specifiers. Prefer `jsr:` packages; use `npm:` only when no JSR alternative exists.
 - **Every exported symbol needs JSDoc**, enforced by `deno doc --lint`. A runnable `@example` is strongly encouraged but
-  not enforced, but any you write are compiled and executed as tests.
+  not enforced; any you write are compiled and executed as tests.
 - **Never edit `version` in `deno.json`**: `cog bump` owns it.
 
 ## CI/CD
@@ -109,7 +109,7 @@ Four are easy to miss:
 
 - Code blocks in JSDoc **and in this README** are compiled and executed as tests (`deno test --doc src/ README.md`). A
   stale example fails the build; tag a fence `` ```ts ignore `` to skip it.
-- `deno audit` queries the npm registry only, so it does not inspect `jsr:` packages, so a clean audit on a JSR-only
+- `deno audit` queries the npm registry only and does not inspect `jsr:` packages, so a clean audit on a JSR-only
   dependency tree means nothing was checked.
 - Repositories owned by a GitHub **organization** must supply a `GITLEAKS_LICENSE` secret; without it the gitleaks
   action exits before scanning. Personal accounts need no license.
@@ -144,6 +144,12 @@ the release job is guarded by `github.event.repository.is_template`.
 
 This template ships **everything**. No real project needs all of it at once. Strip it down to your use case.
 
+Whichever shape you pick, a removed task is usually named in more than one place. When you drop a `publish:*` or
+`build:*` task, also check the `build` target in `Makefile`, the `dependencies` list of `check:publish`, the `publish`
+task command (which hardcodes `deno task publish:jsr && deno task publish:npm`), and the matching job in both
+`pr-checks.yml` and `release.yml`. If you remove an entry from `imports`, run `deno install` afterwards: a stale
+`deno.lock` fails `deno ci`.
+
 <details>
 <summary><strong>TypeScript library (JSR + npm)</strong></summary>
 
@@ -161,11 +167,9 @@ The most common case: a reusable package published to both registries.
 A command-line application distributed as a compiled executable. Users install via `deno install` (JSR) or download the
 binary directly.
 
-**Remove** from `deno.json` tasks: `build:bundle:*`, `build:npm`, `publish:npm`, `check:publish:npm` (also drop it from
-the `check:publish` dependency list), and the obfuscation tasks.\
+**Remove** from `deno.json` tasks: `build:bundle:*`, `build:npm`, `publish:npm`, `check:publish:npm`, and the
+obfuscation tasks.\
 **Remove** from `Makefile`: the bundle/npm lines inside the `build` target.\
-**Remove** the `publish-npm` job from both `release.yml` and `pr-checks.yml`.\
-**Update** the `publish` task command, which hardcodes `deno task publish:jsr && deno task publish:npm`.\
 **Keep**: `build:binary`, `publish:jsr`.
 
 > A CLI needs to write to stdout, so drop `no-console` from `lint.rules.include` in `deno.json`, where it is enabled by
@@ -180,13 +184,33 @@ the `check:publish` dependency list), and the obfuscation tasks.\
 
 A minified JS file meant to be loaded via `<script>` tag or bundled into a larger app.
 
-**Remove** from `deno.json` tasks: `build:binary`, `build:bundle:node`, `build:npm`, `publish:npm`, `check:publish:npm`
-(also drop it from the `check:publish` dependency list).\
-**Remove** the `publish-npm` job from both `release.yml` and `pr-checks.yml`.\
-**Update** the `publish` task command, which hardcodes `deno task publish:jsr && deno task publish:npm`.\
+**Remove** from `deno.json` tasks: `build:binary`, `build:bundle:node`, `build:npm`, `publish:npm`,
+`check:publish:npm`.\
 **Keep**: `build:bundle:browser` (and optionally the obfuscated variant), `publish:jsr`.
 
 > If you want the bundle available on CDNs like unpkg/jsdelivr, keep npm publish, since those CDNs mirror npm.
+
+</details>
+
+<details>
+<summary><strong>Backend service</strong></summary>
+
+An HTTP server or worker that is deployed rather than published. Nothing goes to a registry, so the whole publish and
+bundle surface goes away and what remains is the quality gates, hooks and CI.
+
+**Remove** from `deno.json` tasks: all `build:*`, `publish:*` and `check:publish:*` tasks.\
+**Remove** from `deno.json` imports: `@deno/dnt`.\
+**Remove** from `Makefile`: the `publish` target and all lines inside the `build` target.\
+**Remove** from `release.yml`: the `publish-jsr` and `publish-npm` jobs, keeping the version bump, tag and changelog.\
+**Remove** the `publish-jsr` and `publish-npm` jobs from `pr-checks.yml`.\
+**Keep**: `name` and `exports` in `deno.json`, even unused. They cost nothing, and removing `exports` while keeping
+`name` makes every command print a warning.
+
+> A server writes to stdout, so drop `no-console` from `lint.rules.include`.
+
+> Tests that bind a port need network access, which the sandboxed `test` task does not grant. Add
+> `--allow-net=localhost,0.0.0.0` to the `test` and `test:fast` commands. Host-only entries are required because the
+> port is assigned at run time.
 
 </details>
 
@@ -195,13 +219,9 @@ A minified JS file meant to be loaded via `<script>` tag or bundled into a large
 
 The simplest setup: a library targeting only Deno consumers.
 
-**Remove** from `deno.json` tasks: all `build:*` tasks, `publish:npm`, and `check:publish:npm` (also drop it from the
-`check:publish` dependency list).\
+**Remove** from `deno.json` tasks: all `build:*` tasks, `publish:npm`, and `check:publish:npm`.\
 **Remove** from `deno.json` imports: `@deno/dnt`.\
 **Remove** from `Makefile`: all lines inside the `build` target except the recipe itself.\
-**Remove** the `publish-npm` job from both `release.yml` and `pr-checks.yml`.\
-**Update** the `publish` task command, which hardcodes `deno task publish:jsr && deno task publish:npm`.\
-**Then** run `deno install` to regenerate `deno.lock`, since removing an import leaves it stale and `deno ci` will fail.
 
 </details>
 
