@@ -125,7 +125,7 @@ jobs:
           deno-version: 2.x
           cache: true
       - name: Run tests
-        run: deno test tests/ --coverage=.coverage --parallel --quiet --fail-fast --allow-all --permit-no-files
+        run: deno test tests/ --coverage=.coverage --parallel --quiet --fail-fast --no-prompt --permit-no-files
       - name: Coverage
         run: deno task coverage
 
