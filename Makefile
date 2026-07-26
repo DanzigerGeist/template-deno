@@ -2,7 +2,7 @@ MAKEFLAGS += --no-print-directory
 .SILENT:
 DENO_TASK = deno task -q
 
-.PHONY: help setup format check test security publish build benchmark docs clean update version
+.PHONY: help setup format check ci test security publish build benchmark docs clean update version
 
 help: ## ❓ List available make targets
 	@deno eval 'const files=Deno.args; const entries=[]; const pattern=/^([A-Za-z0-9_.:-]+):.*?##\s*(.+)\s*$$/; for (const file of files) { const text=await Deno.readTextFile(file); for (const line of text.split(/\r?\n/)) { const m=line.match(pattern); if (m) entries.push([m[1], m[2]]); } } entries.sort((a,b)=>a[0].localeCompare(b[0])); const pad=Math.max(8,...entries.map(([n])=>n.length))+2; for (const [name, desc] of entries) console.log(name.padEnd(pad)+desc);' $(MAKEFILE_LIST)
@@ -13,7 +13,7 @@ setup: ## ⚙️ Setup repository
 format: ## 🎨 Format code
 	@deno fmt
 
-check: ## ✅ Run quality checks
+check: ## ✅ Run fast quality checks (format, lint, types, docs, examples)
 	@$(DENO_TASK) check
 
 test: ## 🧪 Run tests
@@ -21,6 +21,9 @@ test: ## 🧪 Run tests
 
 security: ## 🔒 Run security checks
 	@$(DENO_TASK) security
+
+ci: ## 🚦 Run every check CI runs (checks, tests, security, publish dry-runs)
+	@$(DENO_TASK) check:publish
 
 publish: ## 🚀 Publish to JSR and npm
 	@$(DENO_TASK) publish
