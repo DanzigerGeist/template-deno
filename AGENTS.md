@@ -16,11 +16,16 @@ For AI-assisted work, the official [denoland/skills](https://github.com/denoland
 
 ## Commands
 
-- `make check` — format, lint, type, docs and dependency checks
+- `make check` — format, lint, type, docs, example and dependency checks
 - `make test` — test suite with enforced coverage thresholds
+- `make ci` — every check CI runs: `make check`, tests, security and both publish dry-runs
 - `make security` — secret scan (gitleaks) and vulnerability audit
 - `make build` — browser/node bundles, npm package (dnt) and standalone binary
 - `make format` — apply formatting
+
+Individual tasks worth knowing: `deno task check:examples` runs the JSDoc and README code blocks as tests, and
+`deno task test:fast` stops at the first failing test — the pre-push hook uses it, while CI runs the full `test` task so
+every failure is reported at once.
 
 ## Conventions
 
@@ -46,7 +51,8 @@ For AI-assisted work, the official [denoland/skills](https://github.com/denoland
 
 Always:
 
-- Run `make check` and `make test` before preparing a commit.
+- Run `make check` and `make test` before preparing a commit, and `make ci` before pushing — the pre-push hook runs
+  `check`, `test:fast` and `security`.
 - Keep `deno.lock` in sync — `deno task check:dependencies` verifies it.
 
 Ask first:
