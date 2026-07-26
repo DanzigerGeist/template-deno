@@ -193,11 +193,11 @@
     },
     "security:secrets:files": {
       "description": "Scan working tree for leaked credentials (requires gitleaks)",
-      "command": "gitleaks dir . --redact"
+      "command": "gitleaks dir . --redact --verbose"
     },
     "security:secrets:history": {
       "description": "Scan Git history for leaked credentials (requires gitleaks)",
-      "command": "gitleaks git . --redact"
+      "command": "gitleaks git . --redact --verbose"
     },
     "security:vulnerabilities": {
       "description": "Scan dependencies for known vulnerabilities",
